@@ -1,69 +1,158 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <title>Upload zdjęć</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zdjęcia z wesela</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #fff8f2, #fde2e4);
+        color: #5a3d3d;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        text-align: center;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+        background: rgba(255,255,255,0.9);
+        padding: 30px;
+        border-radius: 25px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+    }
+
+    input[type="file"] {
+        width: 100%;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    button {
+        width: 100%;
+        padding: 20px;
+        font-size: 1.3rem;
+        font-weight: bold;
+        border: none;
+        border-radius: 15px;
+        background: #d4a373;
+        color: white;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background: #bc8a5f;
+        transform: scale(1.03);
+    }
+
+    #status {
+        margin-top: 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        p {
+            font-size: 1.4rem;
+        }
+
+        button {
+            font-size: 1.5rem;
+            padding: 22px;
+        }
+    }
+</style>
 </head>
+
 <body>
 
-<input type="file" id="fileInput" multiple accept="image/*">
-<button onclick="upload()">Wyślij zdjęcia</button>
+<div class="container">
+    <h1>💍 Nasze Wesele</h1>
 
-<p id="status"></p>
+    <p>
+        Dodaj swoje zdjęcia z wesela i podziel się wspomnieniami ❤️
+    </p>
+
+    <input type="file" id="fileInput" multiple accept="image/*">
+
+    <button onclick="upload()">
+        📷 Wyślij zdjęcia
+    </button>
+
+    <p id="status"></p>
+</div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxopdd7eglFYUu6JaCT8KLusYUY0_blze5BJkGnE7PDX7XSy2HvaYquDc3Wry4EpksK7g/exec";
+const scriptURL = "TUTAJ_WSTAW_URL";
 
 async function upload() {
-  const files = document.getElementById("fileInput").files;
-  const status = document.getElementById("status");
+    const files = document.getElementById("fileInput").files;
+    const status = document.getElementById("status");
 
-  if (files.length === 0) {
-    status.innerText = "Wybierz zdjęcia 📷";
-    return;
-  }
-
-  status.innerText = "Wysyłanie... 📤";
-
-  for (const file of files) {
-    try {
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = () => {
-          const result = reader.result.split(",")[1];
-          resolve(result);
-        };
-
-        reader.onerror = () => reject(reader.error);
-
-        reader.readAsDataURL(file);
-      });
-
-      const res = await fetch(scriptURL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "text/plain"
-        },
-        body: JSON.stringify({
-          image: base64,
-          mimeType: file.type,
-          filename: file.name
-        })
-      });
-
-      if (!res.ok) {
-        throw new Error(`Błąd serwera: ${res.status}`);
-      }
-
-    } catch (err) {
-      console.error(err);
-      status.innerText = "Błąd wysyłania ❌";
-      return;
+    if (files.length === 0) {
+        status.innerText = "Wybierz zdjęcia 📷";
+        return;
     }
-  }
 
-  status.innerText = "Wysłano ❤️ Dziękujemy!";
+    status.innerText = "Wysyłanie... 📤";
+
+    for (const file of files) {
+        try {
+            const base64 = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+
+                reader.onload = () => {
+                    resolve(reader.result.split(",")[1]);
+                };
+
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+
+            const res = await fetch(scriptURL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "text/plain"
+                },
+                body: JSON.stringify({
+                    image: base64,
+                    mimeType: file.type,
+                    filename: file.name
+                })
+            });
+
+            if (!res.ok) {
+                throw new Error();
+            }
+
+        } catch (err) {
+            status.innerText = "Błąd wysyłania ❌";
+            return;
+        }
+    }
+
+    status.innerText = "Wysłano ❤️ Dziękujemy!";
 }
 </script>
 
