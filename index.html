@@ -28,8 +28,10 @@
         reader.onload = async function(e) {
           const base64 = e.target.result.split(',')[1];
 
-          await fetch(scriptURL, {
-            method: "POST",
+       await fetch(scriptURL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "text/plain"
             body: JSON.stringify({
               image: base64,
               mimeType: file.type,
