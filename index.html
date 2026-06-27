@@ -1,24 +1,4 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-  <meta charset="UTF-8">
-  <title>Wesele - zdjęcia</title>
-</head>
-<body style="font-family: Arial; text-align:center; padding:40px;">
-
-  <h1>📸 Wesele – prześlij zdjęcia</h1>
-
-  <input type="file" id="fileInput" accept="image/*" multiple>
-  <br><br>
-
-  <button onclick="upload()">Wyślij zdjęcia</button>
-
-  <p id="status"></p>
-
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxopdd7eglFYUu6JaCT8KLusYUY0_blze5BJkGnE7PDX7XSy2HvaYquDc3Wry4EpksK7g/exec";
-
-    async function upload() {
+async function upload() {
   const files = document.getElementById('fileInput').files;
   const status = document.getElementById('status');
 
@@ -30,40 +10,44 @@
   status.innerText = "Wysyłanie... 📤";
 
   for (let i = 0; i < files.length; i++) {
-    await new Promise((resolve, reject) => {
-      const file = files[i];
+    const file = files[i];
+
+    const base64 = await new Promise((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.onload = async function (e) {
-        try {
-          const base64 = e.target.result.split(',')[1];
-
-          await fetch(scriptURL, {
-            method: "POST",
-            headers: {
-              "Content-Type": "text/plain"
-            },
-            body: JSON.stringify({
-              image: base64,
-              mimeType: file.type,
-              filename: file.name
-            })
-          });
-
-          resolve();
-        } catch (err) {
-          reject(err);
-        }
+      reader.onload = () => {
+        resolve(reader.result.split(',')[1]);
       };
 
       reader.onerror = reject;
+
       reader.readAsDataURL(file);
     });
+
+    try {
+      const res = await fetch(scriptURL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+          image: base64,
+          mimeType: file.type,
+          filename: file.name
+        })
+      });
+
+      // ważne: sprawdzamy czy request w ogóle przeszedł
+      if (!res.ok) {
+        console.log("Błąd uploadu:", res.status);
+      }
+
+    } catch (err) {
+      console.log("Fetch error:", err);
+      status.innerText = "Błąd wysyłania ❌ sprawdź internet";
+      return;
+    }
   }
 
   status.innerText = "Wysłano ❤️ Dziękujemy!";
 }
-</script>
-
-</body>
-</html>
