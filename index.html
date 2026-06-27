@@ -19,33 +19,47 @@
     const scriptURL = "https://script.google.com/macros/s/AKfycbxopdd7eglFYUu6JaCT8KLusYUY0_blze5BJkGnE7PDX7XSy2HvaYquDc3Wry4EpksK7g/exec";
 
     async function upload() {
-      const files = document.getElementById('fileInput').files;
-      const status = document.getElementById('status');
+  const files = document.getElementById('fileInput').files;
+  const status = document.getElementById('status');
 
-      for (let file of files) {
-        const reader = new FileReader();
+  if (!files.length) {
+    status.innerText = "Wybierz zdjęcia 📷";
+    return;
+  }
 
-        reader.onload = async function(e) {
+  status.innerText = "Wysyłanie... 📤";
+
+  for (let i = 0; i < files.length; i++) {
+    await new Promise((resolve, reject) => {
+      const file = files[i];
+      const reader = new FileReader();
+
+      reader.onload = async function (e) {
+        try {
           const base64 = e.target.result.split(',')[1];
 
-       await fetch(scriptURL, {
-  method: "POST",
-  headers: {
-    "Content-Type": "text/plain"
+          await fetch(scriptURL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "text/plain"
+            },
             body: JSON.stringify({
               image: base64,
               mimeType: file.type,
               filename: file.name
             })
           });
-        };
 
-        reader.readAsDataURL(file);
-      }
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      };
 
-      status.innerText = "Wysyłanie zakończone 🎉";
-    }
-  </script>
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
 
-</body>
-</html>
+  status.innerText = "Wysłano ❤️ Dziękujemy!";
+}
