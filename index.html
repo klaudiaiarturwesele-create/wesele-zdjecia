@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -23,7 +24,7 @@ body {
     width: 100%;
     max-width: 700px;
     background: rgba(255,255,255,0.95);
-    padding: 50px;
+    padding: 50px 30px;
     border-radius: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
@@ -33,33 +34,54 @@ h1 {
     margin-bottom: 20px;
 }
 
-p {
+.description {
     font-size: 2rem;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
 }
 
-input[type="file"] {
+#fileInput {
+    display: none;
+}
+
+.file-button {
+    display: block;
     width: 100%;
-    font-size: 1.8rem;
-    margin: 30px 0;
+    box-sizing: border-box;
+    padding: 30px;
+    margin-bottom: 25px;
+    background: #8fbc8f;
+    color: white;
+    border-radius: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.file-button:hover {
+    background: #78a878;
 }
 
 button {
     width: 100%;
     padding: 30px;
-    font-size: 2.2rem;
-    font-weight: bold;
     border: none;
     border-radius: 20px;
     background: #d4a373;
     color: white;
+    font-size: 2.2rem;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    transform: scale(1.03);
     background: #bc8a5f;
+}
+
+#selectedFiles {
+    margin-top: 20px;
+    font-size: 1.6rem;
 }
 
 #status {
@@ -70,20 +92,22 @@ button:hover {
 
 @media (max-width: 600px) {
     h1 {
-        font-size: 3.5rem;
+        font-size: 3rem;
     }
 
-    p {
-        font-size: 1.8rem;
+    .description {
+        font-size: 1.7rem;
     }
 
+    .file-button,
     button {
-        font-size: 2rem;
-        padding: 28px;
+        font-size: 1.8rem;
+        padding: 25px;
     }
 
+    #selectedFiles,
     #status {
-        font-size: 1.8rem;
+        font-size: 1.5rem;
     }
 }
 </style>
@@ -92,26 +116,45 @@ button:hover {
 <body>
 
 <div class="container">
-    <h1>💍 Klaudia i Artur Wesele 25.07.26r </h1>
+    <h1>💍 Klaudia i Artur Wesele 25.07.26r</h1>
 
-    <p>
+    <p class="description">
         Dodaj swoje zdjęcia i podziel się wspomnieniami ❤️
     </p>
 
-    <input type="file"
-           id="fileInput"
-           accept="image/*"
-           multiple>
+    <label for="fileInput" class="file-button">
+        📷 Wybierz zdjęcia
+    </label>
+
+    <input
+        type="file"
+        id="fileInput"
+        accept="image/*"
+        multiple
+    >
+
+    <div id="selectedFiles"></div>
 
     <button onclick="upload()">
-        📷 Wyślij zdjęcia
+        ❤️ Wyślij zdjęcia
     </button>
 
-    <p id="status"></p>
+    <div id="status"></div>
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxopdd7eglFYUu6JaCT8KLusYUY0_blze5BJkGnE7PDX7XSy2HvaYquDc3Wry4EpksK7g/exec";
+
+document.getElementById("fileInput").addEventListener("change", function () {
+    const files = this.files;
+    const info = document.getElementById("selectedFiles");
+
+    if (files.length === 0) {
+        info.innerText = "";
+    } else {
+        info.innerText = "Wybrano zdjęć: " + files.length;
+    }
+});
 
 async function upload() {
     const files = document.getElementById("fileInput").files;
@@ -140,6 +183,7 @@ async function upload() {
 
                 reader.readAsDataURL(file);
             });
+
         } catch (err) {
             status.innerText = "Błąd odczytu zdjęcia ❌";
             return;
@@ -159,7 +203,7 @@ async function upload() {
             });
 
             if (!response.ok) {
-                throw new Error("HTTP " + response.status);
+                throw new Error();
             }
 
         } catch (err) {
