@@ -118,38 +118,28 @@ async function upload() {
     status.innerText = "Wysyłanie... 📤";
 
     for (const file of files) {
-        try {
-            const base64 = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
+     try {
+    const res = await fetch(scriptURL, {
+        method: "POST",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+            image: base64,
+            mimeType: file.type,
+            filename: file.name
+        })
+    });
 
-                reader.onload = () => {
-                    resolve(reader.result.split(",")[1]);
-                };
+    if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+    }
 
-                reader.onerror = reject;
-                reader.readAsDataURL(file);
-            });
-
-            const res = await fetch(scriptURL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-                body: JSON.stringify({
-                    image: base64,
-                    mimeType: file.type,
-                    filename: file.name
-                })
-            });
-
-            if (!res.ok) {
-                throw new Error();
-            }
-
-        } catch (err) {
-            status.innerText = "Błąd wysyłania ❌";
-            return;
-        }
+} catch (err) {
+    console.error(err);
+    status.innerText = "Błąd: " + err.message;
+    return;
+}
     }
 
     status.innerText = "Wysłano ❤️ Dziękujemy!";
