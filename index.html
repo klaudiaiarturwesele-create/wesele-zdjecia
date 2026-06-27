@@ -7,17 +7,43 @@
 <body style="font-family: Arial; text-align:center; padding:40px;">
 
   <h1>📸 Wesele – prześlij zdjęcia</h1>
-  <p>Zeskanuj QR i dodaj swoje zdjęcia</p>
 
-  <form>
-    <input type="file" multiple accept="image/*">
-    <br><br>
-    <button type="button">Wyślij</button>
-  </form>
+  <input type="file" id="fileInput" accept="image/*" multiple>
+  <br><br>
 
-  <p style="margin-top:30px; font-size:12px;">
-    (To jest wersja startowa – zaraz zrobimy upload prawdziwy)
-  </p>
+  <button onclick="upload()">Wyślij zdjęcia</button>
+
+  <p id="status"></p>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbylhtk7XJfm7wH8lIPxr4kTSNkJcSl4MqOOw9L9mTi2ipuWCZjrn_SGgwNaD-AD9pIN_Q/exec";
+
+    async function upload() {
+      const files = document.getElementById('fileInput').files;
+      const status = document.getElementById('status');
+
+      for (let file of files) {
+        const reader = new FileReader();
+
+        reader.onload = async function(e) {
+          const base64 = e.target.result.split(',')[1];
+
+          await fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+              image: base64,
+              mimeType: file.type,
+              filename: file.name
+            })
+          });
+        };
+
+        reader.readAsDataURL(file);
+      }
+
+      status.innerText = "Wysyłanie zakończone 🎉";
+    }
+  </script>
 
 </body>
 </html>
