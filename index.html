@@ -11,7 +11,7 @@ body {
     padding: 20px;
     font-family: Arial, sans-serif;
 
-    background-image: url("tlo.jpg");
+    background-image: url("images/tlo.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -23,53 +23,95 @@ body {
 
     min-height: 100vh;
 }
-
 .container {
     width: 100%;
-    max-width: 500px;
+    max-width: 700px;
     background: rgba(255,255,255,0.95);
-    padding: 30px;
-    border-radius: 25px;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    padding: 50px 30px;
+    border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
 }
 
 h1 {
-    font-size: 2.3rem;
-    margin-bottom: 10px;
+    font-size: 4rem;
+    margin-bottom: 20px;
 }
 
-p {
-    font-size: 1.2rem;
+.description {
+    font-size: 2rem;
+    margin-bottom: 40px;
 }
 
-input[type="file"] {
+#fileInput {
+    display: none;
+}
+
+.file-button {
+    display: block;
     width: 100%;
-    font-size: 1.1rem;
-    margin: 20px 0;
+    box-sizing: border-box;
+    padding: 30px;
+    margin-bottom: 25px;
+    background: #8fbc8f;
+    color: white;
+    border-radius: 20px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.file-button:hover {
+    background: #78a878;
 }
 
 button {
     width: 100%;
-    padding: 20px;
-    font-size: 1.4rem;
-    font-weight: bold;
+    padding: 30px;
     border: none;
-    border-radius: 15px;
+    border-radius: 20px;
     background: #d4a373;
     color: white;
+    font-size: 2.2rem;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
 button:hover {
-    transform: scale(1.03);
     background: #bc8a5f;
 }
 
-#status {
+#selectedFiles {
     margin-top: 20px;
-    font-size: 1.2rem;
+    font-size: 1.6rem;
+}
+
+#status {
+    margin-top: 30px;
+    font-size: 2rem;
     font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    h1 {
+        font-size: 3rem;
+    }
+
+    .description {
+        font-size: 1.7rem;
+    }
+
+    .file-button,
+    button {
+        font-size: 1.8rem;
+        padding: 25px;
+    }
+
+    #selectedFiles,
+    #status {
+        font-size: 1.5rem;
+    }
 }
 </style>
 </head>
@@ -79,22 +121,43 @@ button:hover {
 <div class="container">
     <h1>💍 Nasze Wesele</h1>
 
-    <p>Dodaj swoje zdjęcia i podziel się wspomnieniami ❤️</p>
+    <p class="description">
+        Dodaj swoje zdjęcia i podziel się wspomnieniami ❤️
+    </p>
 
-    <input type="file"
-           id="fileInput"
-           accept="image/*"
-           multiple>
+    <label for="fileInput" class="file-button">
+        📷 Wybierz zdjęcia
+    </label>
+
+    <input
+        type="file"
+        id="fileInput"
+        accept="image/*"
+        multiple
+    >
+
+    <div id="selectedFiles"></div>
 
     <button onclick="upload()">
-        📷 Wyślij zdjęcia
+        ❤️ Wyślij zdjęcia
     </button>
 
-    <p id="status"></p>
+    <div id="status"></div>
 </div>
 
 <script>
 const scriptURL = "https://script.google.com/macros/s/AKfycbxtBqSQH3GgW_wrNceAN7vlOjHrgSMacdXtvbMyn7w-m9skxvqY_Qrtf5o2P4usFM12yQ/exec";
+
+document.getElementById("fileInput").addEventListener("change", function () {
+    const files = this.files;
+    const info = document.getElementById("selectedFiles");
+
+    if (files.length === 0) {
+        info.innerText = "";
+    } else {
+        info.innerText = "Wybrano zdjęć: " + files.length;
+    }
+});
 
 async function upload() {
     const files = document.getElementById("fileInput").files;
@@ -123,6 +186,7 @@ async function upload() {
 
                 reader.readAsDataURL(file);
             });
+
         } catch (err) {
             status.innerText = "Błąd odczytu zdjęcia ❌";
             return;
@@ -142,7 +206,7 @@ async function upload() {
             });
 
             if (!response.ok) {
-                throw new Error("HTTP " + response.status);
+                throw new Error();
             }
 
         } catch (err) {
