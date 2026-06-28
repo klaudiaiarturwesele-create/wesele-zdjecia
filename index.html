@@ -1,220 +1,342 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zdjęcia z wesela</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klaudia i Artur - Wesele 25.07.2026</title>
 
-<style>
-body {
-    margin: 0;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #fff8f2, #fde2e4);
-    color: #5a3d3d;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    text-align: center;
-}
+    <style>
 
-.container {
-    width: 100%;
-    max-width: 700px;
-    background: rgba(255,255,255,0.95);
-    padding: 50px 30px;
-    border-radius: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-}
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
 
-h1 {
-    font-size: 4rem;
-    margin-bottom: 20px;
-}
+            background-image: url("tlo.jpg");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
 
-.description {
-    font-size: 2rem;
-    margin-bottom: 40px;
-}
+            display: flex;
+            justify-content: center;
+            align-items: center;
 
-#fileInput {
-    display: none;
-}
+            min-height: 100vh;
+        }
 
-.file-button {
-    display: block;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 30px;
-    margin-bottom: 25px;
-    background: #8fbc8f;
-    color: white;
-    border-radius: 20px;
-    font-size: 2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
+        .container {
+            width: 100%;
+            max-width: 700px;
 
-.file-button:hover {
-    background: #78a878;
-}
+            background: rgba(255,255,255,0.95);
 
-button {
-    width: 100%;
-    padding: 30px;
-    border: none;
-    border-radius: 20px;
-    background: #d4a373;
-    color: white;
-    font-size: 2.2rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
+            padding: 40px;
 
-button:hover {
-    background: #bc8a5f;
-}
+            border-radius: 30px;
 
-#selectedFiles {
-    margin-top: 20px;
-    font-size: 1.6rem;
-}
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 
-#status {
-    margin-top: 30px;
-    font-size: 2rem;
-    font-weight: bold;
-}
+            text-align: center;
+        }
 
-@media (max-width: 600px) {
-    h1 {
-        font-size: 3rem;
-    }
+        h1 {
+            font-size: 4rem;
+            color: #5a3d3d;
+            margin-bottom: 10px;
+        }
 
-    .description {
-        font-size: 1.7rem;
-    }
+        .subtitle {
+            font-size: 2.5rem;
+            color: #5a3d3d;
+            margin-bottom: 20px;
+        }
 
-    .file-button,
-    button {
-        font-size: 1.8rem;
-        padding: 25px;
-    }
+        .description {
+            font-size: 2rem;
+            color: #5a3d3d;
+            margin-bottom: 30px;
+        }
 
-    #selectedFiles,
-    #status {
-        font-size: 1.5rem;
-    }
-}
-</style>
+        input[type="text"] {
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 20px;
+
+            font-size: 1.6rem;
+
+            border: 2px solid #ddd;
+
+            border-radius: 15px;
+
+            margin-bottom: 25px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .fileButton {
+            display: block;
+
+            width: 100%;
+            box-sizing: border-box;
+
+            padding: 30px;
+
+            background: #93b68c;
+
+            color: white;
+
+            font-size: 2rem;
+
+            font-weight: bold;
+
+            border-radius: 20px;
+
+            cursor: pointer;
+
+            margin-bottom: 25px;
+
+            transition: 0.3s;
+        }
+
+        .fileButton:hover {
+            background: #7fa678;
+        }
+
+        button {
+            width: 100%;
+
+            padding: 30px;
+
+            border: none;
+
+            border-radius: 20px;
+
+            background: #d0a16f;
+
+            color: white;
+
+            font-size: 2rem;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #bb8d5d;
+        }
+
+        #selectedFiles {
+            margin-top: 20px;
+            font-size: 1.5rem;
+            color: #5a3d3d;
+        }
+
+        #preview {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #preview img {
+            width: 120px;
+            height: 120px;
+
+            object-fit: cover;
+
+            border-radius: 15px;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        #progressContainer {
+            width: 100%;
+
+            height: 30px;
+
+            background: #ddd;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 30px;
+        }
+
+        #progressBar {
+            width: 0%;
+
+            height: 100%;
+
+            background: #7fbf7f;
+
+            transition: 0.3s;
+        }
+
+        #status {
+            margin-top: 25px;
+
+            font-size: 1.8rem;
+
+            font-weight: bold;
+
+            color: #5a3d3d;
+        }
+
+        #counter {
+            margin-top: 30px;
+
+            font-size: 1.8rem;
+
+            color: #5a3d3d;
+        }
+
+        h2 {
+            margin-top: 40px;
+
+            color: #5a3d3d;
+
+            font-size: 2rem;
+        }
+
+        #gallery {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            margin-top: 20px;
+        }
+
+        #gallery img {
+            width: 110px;
+            height: 110px;
+
+            object-fit: cover;
+
+            border-radius: 15px;
+
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 3rem;
+            }
+
+            .subtitle {
+                font-size: 2rem;
+            }
+
+            .description {
+                font-size: 1.6rem;
+            }
+
+            .fileButton,
+            button {
+                font-size: 1.7rem;
+                padding: 25px;
+            }
+
+            input[type="text"] {
+                font-size: 1.4rem;
+            }
+
+            #status,
+            #counter {
+                font-size: 1.5rem;
+            }
+        }
+
+    </style>
 </head>
 
 <body>
 
 <div class="container">
-    <h1>💍 Klaudia i Artur Wesele 25.07.26r</h1>
 
-    <p class="description">
-        Dodaj swoje zdjęcia i podziel się wspomnieniami 
-    </p>
+    <h1>💍 Klaudia i Artur</h1>
 
-    <label for="fileInput" class="file-button">
+    <div class="subtitle">
+        Wesele 25.07.2026 ❤️
+    </div>
+
+    <div class="description">
+        Dodaj swoje zdjęcia i podziel się wspomnieniami 📸
+    </div>
+
+    <input
+        type="text"
+        id="name"
+        placeholder="Jak masz na imię?">
+
+    <label for="fileInput" class="fileButton">
         📷 Wybierz zdjęcia
     </label>
 
     <input
         type="file"
         id="fileInput"
-        accept="image/*"
         multiple
-    >
+        accept="image/*">
 
     <div id="selectedFiles"></div>
 
+    <div id="preview"></div>
+
     <button onclick="upload()">
-        💌 Wyślij zdjęcia
+        ❤️ Wyślij zdjęcia
     </button>
 
+    <div id="progressContainer">
+        <div id="progressBar"></div>
+    </div>
+
     <div id="status"></div>
-</div>
 
-<script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxopdd7eglFYUu6JaCT8KLusYUY0_blze5BJkGnE7PDX7XSy2HvaYquDc3Wry4EpksK7g/exec";
+    <div id="counter"></div>
 
-document.getElementById("fileInput").addEventListener("change", function () {
-    const files = this.files;
-    const info = document.getElementById("selectedFiles");
+    <h2>📸 Zdjęcia gości</h2>
+            img.title = photo.name;
 
-    if (files.length === 0) {
-        info.innerText = "";
-    } else {
-        info.innerText = "Wybrano zdjęć: " + files.length;
+            gallery.appendChild(img);
+        });
+
+    } catch (err) {
+
+        console.log(err);
+
+        counter.innerText =
+            "Nie można pobrać galerii";
     }
-});
-
-async function upload() {
-    const files = document.getElementById("fileInput").files;
-    const status = document.getElementById("status");
-
-    if (files.length === 0) {
-        status.innerText = "Wybierz zdjęcia 📷";
-        return;
-    }
-
-    status.innerText = "Wysyłanie... 📤";
-
-    for (const file of files) {
-
-        let base64;
-
-        try {
-            base64 = await new Promise((resolve, reject) => {
-                const reader = new FileReader();
-
-                reader.onload = function () {
-                    resolve(reader.result.split(",")[1]);
-                };
-
-                reader.onerror = reject;
-
-                reader.readAsDataURL(file);
-            });
-
-        } catch (err) {
-            status.innerText = "Błąd odczytu zdjęcia ❌";
-            return;
-        }
-
-        try {
-            const response = await fetch(scriptURL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "text/plain"
-                },
-                body: JSON.stringify({
-                    image: base64,
-                    mimeType: file.type,
-                    filename: file.name
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error();
-            }
-
-        } catch (err) {
-            console.error(err);
-            status.innerText = "Błąd wysyłania ❌";
-            return;
-        }
-    }
-
-    status.innerText = "Wysłano ❤️ Dziękujemy!";
 }
+
+loadGallery();
+
 </script>
 
 </body>
 </html>
+    <div id="gallery"></div>
+
+</div>
+
+<script>
