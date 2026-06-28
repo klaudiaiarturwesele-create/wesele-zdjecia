@@ -10,19 +10,15 @@ body {
     margin: 0;
     padding: 20px;
     font-family: Arial, sans-serif;
-
-    background-image: url("images/tlo.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-
+    background: linear-gradient(135deg, #fff8f2, #fde2e4);
+    color: #5a3d3d;
     display: flex;
     justify-content: center;
     align-items: center;
-
     min-height: 100vh;
+    text-align: center;
 }
+
 .container {
     width: 100%;
     max-width: 700px;
@@ -119,10 +115,10 @@ button:hover {
 <body>
 
 <div class="container">
-    <h1>💍 Nasze Wesele</h1>
+    <h1>💍 Klaudia i Artur Wesele 25.07.26r</h1>
 
     <p class="description">
-        Dodaj swoje zdjęcia i podziel się wspomnieniami ❤️
+        Dodaj swoje zdjęcia i podziel się wspomnieniami 
     </p>
 
     <label for="fileInput" class="file-button">
@@ -139,14 +135,14 @@ button:hover {
     <div id="selectedFiles"></div>
 
     <button onclick="upload()">
-        ❤️ Wyślij zdjęcia
+        💌 Wyślij zdjęcia
     </button>
 
     <div id="status"></div>
 </div>
 
 <script>
-const scriptURL = "https://script.google.com/macros/s/AKfycbxtBqSQH3GgW_wrNceAN7vlOjHrgSMacdXtvbMyn7w-m9skxvqY_Qrtf5o2P4usFM12yQ/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbyTjBCCA8nuCfX9V0GhM7oaVqGv1pz8Tcxx3TpeQJAoohjXc1VpYSBSFD56v7Qc4BrfEA/exec";
 
 document.getElementById("fileInput").addEventListener("change", function () {
     const files = this.files;
